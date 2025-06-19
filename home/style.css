@@ -1,0 +1,25 @@
+/* style.css */
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6; /* Light gray background */
+}
+
+/* Custom scrollbar for detail view */
+.overflow-y-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.overflow-y-scroll::-webkit-scrollbar-track {
+    background: #e0e0e0;
+    border-radius: 10px;
+}
+
+.overflow-y-scroll::-webkit-scrollbar-thumb {
+    background: #a0a0a0;
+    border-radius: 10px;
+}
+
+.overflow-y-scroll::-webkit-scrollbar-thumb:hover {
+    background: #808080;
+}
