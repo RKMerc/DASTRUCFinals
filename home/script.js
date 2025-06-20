@@ -142,6 +142,9 @@ const modalServices = document.getElementById('modalServices');
 const modalProducts = document.getElementById('modalProducts');
 const modalExternalLinks = document.getElementById('modalExternalLinks');
 
+// Variable to store the currently active filter tag
+let activeTagFilter = '';
+
 /**
  * Renders all seller profile cards on the page.
  */
@@ -178,6 +181,7 @@ function renderSellerCards() {
         `;
         container.appendChild(card);
     });
+    filterSellers(); // Apply filters after rendering (important for initial load and tag clicks)
 }
 
 /**
@@ -264,14 +268,11 @@ function closeModal() {
 }
 
 /**
- * Filters seller cards based on search input and tag filter.
+ * Filters seller cards based on search input and the active tag filter.
  */
 function filterSellers() {
     const searchInput = document.getElementById('searchInput');
-    const tagFilterInput = document.getElementById('tagFilterInput');
-
     const searchTerm = searchInput.value.toLowerCase();
-    const tagFilterTerm = tagFilterInput.value.toLowerCase().split(',').map(tag => tag.trim()).filter(tag => tag !== ''); // Split by comma for multiple tags
 
     const cards = document.getElementById('sellerCardsContainer').children;
 
@@ -296,15 +297,12 @@ function filterSellers() {
                               servicesText.includes(searchTerm) ||
                               productsText.includes(searchTerm);
 
-        // Check for tag filter term
+        // Check for active tag filter
         const allServiceTags = new Set(seller.services.flatMap(svc => svc.tags || []).map(tag => tag.toLowerCase()));
-        let matchesTags = true; // Assume true if no tags are being filtered
-        if (tagFilterTerm.length > 0) {
-            matchesTags = tagFilterTerm.every(filterTag => allServiceTags.has(filterTag));
-        }
+        const matchesTag = activeTagFilter === '' || allServiceTags.has(activeTagFilter);
 
         // A card is visible if it matches BOTH the search term AND the tag filter term
-        if (matchesSearch && matchesTags) {
+        if (matchesSearch && matchesTag) {
             card.style.display = ''; // Show card
         } else {
             card.style.display = 'none'; // Hide card
@@ -312,13 +310,79 @@ function filterSellers() {
     });
 }
 
+/**
+ * Generates and displays the clickable tags in the sidebar.
+ */
+function renderTagsSidebar() {
+    const tagListContainer = document.getElementById('tagList');
+    tagListContainer.innerHTML = ''; // Clear existing tags
+
+    const allTags = new Set();
+    sellerData.forEach(seller => {
+        seller.services.forEach(service => {
+            if (service.tags) {
+                service.tags.forEach(tag => allTags.add(tag.toLowerCase()));
+            }
+        });
+    });
+
+    // Sort tags alphabetically
+    const sortedTags = Array.from(allTags).sort();
+
+    // "All" tag to clear filters
+    const allTagElement = document.createElement('li');
+    allTagElement.className = `px-3 py-2 rounded-lg cursor-pointer text-gray-800 font-medium
+                               hover:bg-blue-100 hover:text-blue-700 transition duration-200 ease-in-out
+                               ${activeTagFilter === '' ? 'bg-blue-200 text-blue-800' : ''}`;
+    allTagElement.textContent = "All Services";
+    allTagElement.onclick = () => {
+        activeTagFilter = '';
+        updateTagSelectionUI();
+        filterSellers();
+    };
+    tagListContainer.appendChild(allTagElement);
+
+
+    sortedTags.forEach(tag => {
+        const li = document.createElement('li');
+        li.className = `px-3 py-2 rounded-lg cursor-pointer text-gray-800 font-medium
+                       hover:bg-blue-100 hover:text-blue-700 transition duration-200 ease-in-out
+                       ${activeTagFilter === tag ? 'bg-blue-200 text-blue-800' : ''}`;
+        li.textContent = `#${tag}`;
+        li.onclick = () => {
+            // Toggle active filter: if clicking the current active tag, clear it. Otherwise, set it.
+            activeTagFilter = (activeTagFilter === tag) ? '' : tag;
+            updateTagSelectionUI(); // Update UI for active/inactive tags
+            filterSellers(); // Re-filter seller cards
+        };
+        tagListContainer.appendChild(li);
+    });
+}
+
+/**
+ * Updates the UI to show which tag is currently selected in the sidebar.
+ */
+function updateTagSelectionUI() {
+    const tagElements = document.querySelectorAll('#tagList li');
+    tagElements.forEach(li => {
+        const tagText = li.textContent.startsWith('#') ? li.textContent.substring(1).toLowerCase() : li.textContent.toLowerCase();
+        if (activeTagFilter === tagText || (activeTagFilter === '' && tagText === 'all services')) {
+            li.classList.add('bg-blue-200', 'text-blue-800');
+            li.classList.remove('bg-blue-100', 'text-blue-700'); // Ensure hover state isn't stuck
+        } else {
+            li.classList.remove('bg-blue-200', 'text-blue-800');
+        }
+    });
+}
+
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     renderSellerCards();
+    renderTagsSidebar(); // Render the sidebar tags
 
-    // Attach event listeners to input fields
+    // Attach event listeners to search input field
     document.getElementById('searchInput').addEventListener('keyup', filterSellers);
-    document.getElementById('tagFilterInput').addEventListener('keyup', filterSellers);
 });
 
 // Close modal when clicking outside of the content
