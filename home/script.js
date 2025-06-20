@@ -47,7 +47,7 @@ const profileMessageDiv = document.getElementById('profileMessage');
 const addServiceSection = document.getElementById('addServiceSection');
 const serviceNameInput = document.getElementById('serviceName');
 const serviceDescriptionInput = document.getElementById('serviceDescription');
-const servicePriceRangeInput = document = document.getElementById('servicePriceRange'); // Corrected typo here
+const servicePriceRangeInput = document.getElementById('servicePriceRange'); // Corrected typo here
 const serviceTagsInput = document.getElementById('serviceTags');
 const serviceMessageDiv = document.getElementById('serviceMessage');
 
