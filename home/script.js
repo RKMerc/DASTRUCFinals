@@ -1,20 +1,182 @@
-// script.js
+// script.js (using hardcoded dummy data instead of Supabase)
 
-// Supabase Client Initialization - IMPORTANT: Replace with your actual keys
-const SUPABASE_URL = 'https://pfvrfndyqxyhowcdjslv.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmdnJmbmR5cXh5aG93Y2Rqc2x2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzOTQ5MjgsImV4cCI6MjA2NTk3MDkyOH0.knM9HNGZl_kmPlJnBL4yfCeN4timnuuAT9aEBtTUc-o';
+// --- Dummy Data ---
+// This array replaces fetching data from Supabase for demonstration purposes.
+const sellerData = [
+    {
+        id: 'dummy-seller-1',
+        userId: 'dummy-user-1-id', // Not actively used for display in this dummy version
+        companyName: 'Bayanihan Crafts Co.',
+        bio: 'A collective of local artisans specializing in traditional Filipino crafts and bespoke modern designs. We connect heritage with innovation through our unique, handcrafted items, celebrating the rich culture of the Philippines.',
+        contactInfo: 'email: info@bayancrafts.ph | phone: +63 917 123 4567 | fb: @BayanihanCrafts',
+        services: [
+            {
+                id: 'svc-101',
+                name: 'Custom Weaving Workshops',
+                description: 'Hands-on workshops teaching traditional weaving techniques. Learn to create beautiful textiles with all materials provided.',
+                priceRange: 'P1,500 - P3,000 per session',
+                tags: ['workshop', 'crafts', 'weaving', 'experience', 'local']
+            },
+            {
+                id: 'svc-102',
+                name: 'Online Craft Tutorials',
+                description: 'Digital courses on various crafting skills, accessible anytime, anywhere. Perfect for learning at your own pace.',
+                priceRange: 'P500/course',
+                tags: ['online', 'education', 'crafting', 'digital', 'diy']
+            }
+        ],
+        products: [
+            {
+                id: 'prod-201',
+                name: 'Handwoven Basket (Small)',
+                description: 'Beautifully crafted small basket, perfect for home decor or as a unique gift.',
+                price: 850.00,
+                stock: 25
+            },
+            {
+                id: 'prod-202',
+                name: 'Philippine Motif Scarves',
+                description: 'Elegant silk scarves with intricate indigenous designs, a blend of tradition and modern fashion.',
+                price: 1200.00,
+                stock: 15
+            }
+        ],
+        externalLinks: [
+            {
+                id: 'link-301',
+                platformName: 'Instagram',
+                url: 'https://instagram.com/bayanihancrafts'
+            },
+            {
+                id: 'link-302',
+                platformName: 'Facebook',
+                url: 'https://facebook.com/bayanihancrafts'
+            }
+        ]
+    },
+    {
+        id: 'dummy-seller-2',
+        userId: 'dummy-user-2-id',
+        companyName: 'Luzon Logistics Express',
+        bio: 'Your reliable partner for fast and secure package delivery across Luzon. We handle everything from small parcels to bulk cargo with utmost care and efficiency.',
+        contactInfo: 'email: contact@luzonlogistics.ph | phone: +63 920 987 6543 | web: luzonlogistics.ph',
+        services: [
+            {
+                id: 'svc-103',
+                name: 'Same-Day City Delivery',
+                description: 'Express delivery within Metro Manila for urgent packages. Our fastest service for time-sensitive needs.',
+                priceRange: 'P250 - P800 (depending on size/distance)',
+                tags: ['delivery', 'express', 'metro manila', 'logistics']
+            },
+            {
+                id: 'svc-104',
+                name: 'Provincial Cargo Transport',
+                description: 'Secure and insured transport of goods to any province in Luzon. Ideal for businesses and personal large items.',
+                priceRange: 'Starts at P1,500',
+                tags: ['cargo', 'provincial', 'transport', 'logistics']
+            }
+        ],
+        products: [], // This seller offers no products
+        externalLinks: [
+            {
+                id: 'link-303',
+                platformName: 'Website',
+                url: 'https://luzonlogistics.ph'
+            }
+        ]
+    },
+    {
+        id: 'dummy-seller-3',
+        userId: 'dummy-user-3-id',
+        companyName: 'Island Eats Catering',
+        bio: 'Bringing the authentic flavors of the Philippine islands to your events. Specializing in traditional dishes and modern culinary delights, perfect for any gathering, big or small.',
+        contactInfo: 'email: events@islandeats.ph | phone: +63 939 111 2222',
+        services: [
+            {
+                id: 'svc-105',
+                name: 'Event Catering Packages',
+                description: 'Customizable menus for weddings, birthdays, corporate events, and more. Full-service catering tailored to your needs.',
+                priceRange: 'P800 - P2,500/head',
+                tags: ['catering', 'events', 'food', 'party', 'filipino cuisine']
+            },
+            {
+                id: 'svc-106',
+                name: 'Meal Prep Delivery',
+                description: 'Healthy and delicious pre-cooked meals delivered weekly. Perfect for busy individuals or families.',
+                priceRange: 'P3,500/week (5 meals)',
+                tags: ['meal prep', 'healthy', 'delivery', 'weekly']
+            }
+        ],
+        products: [
+            {
+                id: 'prod-203',
+                name: 'Adobo Flakes Jar',
+                description: 'Crispy adobo flakes, perfect as a topping, snack, or addition to your favorite rice dish.',
+                price: 280.00,
+                stock: 50
+            },
+            {
+                id: 'prod-204',
+                name: 'Gourmet Tuyo Paste',
+                description: 'Spicy gourmet tuyo (dried fish) paste, a Filipino breakfast staple.',
+                price: 220.00,
+                stock: 30
+            }
+        ],
+        externalLinks: [] // This seller has no external links
+    },
+    {
+        id: 'dummy-seller-4',
+        userId: 'dummy-user-4-id',
+        companyName: 'Visayas Veggie Hub',
+        bio: 'Your fresh source for organic vegetables straight from Visayan farms. Committed to sustainable farming practices and promoting healthy eating in the community.',
+        contactInfo: 'email: veggiehub@example.com | phone: +63 945 333 4444 | fb: @VisayasVeggieHub',
+        services: [
+            {
+                id: 'svc-107',
+                name: 'Weekly Organic Vegetable Boxes',
+                description: 'A curated selection of fresh, seasonal organic vegetables delivered to your door every week.',
+                priceRange: 'P700/box',
+                tags: ['organic', 'vegetables', 'subscription', 'farm fresh', 'visayas']
+            },
+            {
+                id: 'svc-108',
+                name: 'Farm Visits & Tours',
+                description: 'Educational tours of our organic farms. Learn about sustainable agriculture and pick your own produce!',
+                priceRange: 'P300/person',
+                tags: ['farm', 'tour', 'education', 'experience']
+            }
+        ],
+        products: [
+            {
+                id: 'prod-205',
+                name: 'Organic Kale Bunch',
+                description: 'Freshly harvested organic kale, rich in nutrients.',
+                price: 120.00,
+                stock: 70
+            },
+            {
+                id: 'prod-206',
+                name: 'Heirloom Tomatoes (1kg)',
+                description: 'Sweet and juicy heirloom tomatoes, grown with traditional methods for superior flavor.',
+                price: 250.00,
+                stock: 30
+            }
+        ],
+        externalLinks: [
+            {
+                id: 'link-304',
+                platformName: 'Facebook',
+                url: 'https://facebook.com/visayasveggiehub'
+            }
+        ]
+    }
+];
 
-// Corrected: Supabase should be capitalized as it comes from the CDN.
-const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Global variable to store current user session
-let activeUser = null;
-
-// This sellerData will now be dynamically populated from Supabase
-let sellerData = []; // Initialize as an empty array, will be filled by fetchAllSellerData()
+// --- End of Dummy Data ---
 
 
-// Get elements for the modal (existing)
+// Get elements for the modal
 const sellerDetailModal = document.getElementById('sellerDetailModal');
 const modalContent = document.getElementById('modalContent');
 const modalCompanyName = document.getElementById('modalCompanyName');
@@ -27,86 +189,24 @@ const modalExternalLinks = document.getElementById('modalExternalLinks');
 // Variable to store the currently active filter tag
 let activeTagFilter = '';
 
-// New UI element references
+// UI element references (Authentication related - non-functional in this dummy version)
 const authStatusDiv = document.getElementById('authStatus');
-const authActionsDiv = document.getElementById('authActions'); // Container for Login/Signup/Logout action buttons
+const authActionsDiv = document.getElementById('authActions');
 const showLoginBtn = document.getElementById('showLoginBtn');
 const showSignupBtn = document.getElementById('showSignupBtn');
 const logoutBtn = document.getElementById('logoutBtn');
-
-const authFormsDiv = document.getElementById('authForms'); // The container for login/signup input forms
+const authFormsDiv = document.getElementById('authForms');
 const loginFormDiv = document.getElementById('loginForm');
 const signupFormDiv = document.getElementById('signupForm');
-const loginEmailInput = document.getElementById('loginEmail');
-const loginPasswordInput = document.getElementById('loginPassword');
-const signupEmailInput = document.getElementById('signupEmail');
-const signupPasswordInput = document.getElementById('signupPassword');
 const messageContainer = document.getElementById('messageContainer');
 
+// Seller Profile and Service forms (non-functional in this dummy version)
 const profileCreationSection = document.getElementById('profileCreationSection');
-const profileCompanyNameInput = document = document.getElementById('profileCompanyName'); // Typo alert: "document = document.getElementById"
-const profileBioInput = document.getElementById('profileBio');
-const profileContactInfoInput = document.getElementById('profileContactInfo');
-const profileMessageDiv = document.getElementById('profileMessage');
-
 const addServiceSection = document.getElementById('addServiceSection');
-const serviceNameInput = document.getElementById('serviceName');
-const serviceDescriptionInput = document.getElementById('serviceDescription');
-const servicePriceRangeInput = document.getElementById('servicePriceRange');
-const serviceTagsInput = document.getElementById('serviceTags');
-const serviceMessageDiv = document.getElementById('serviceMessage');
 
 
-// Supabase Authentication Functions
-/**
- * Handles user sign-up with email and password.
- * @param {string} email
- * @param {string} password
- */
-async function signUp(email, password) {
-    const { data, error } = await supabase.auth.signUp({ email, password });
-    if (error) {
-        console.error('Sign Up Error:', error.message);
-        showMessage('Error signing up: ' + error.message, 'error');
-    } else {
-        console.log('User signed up:', data.user);
-        showMessage('Sign up successful! Please check your email to confirm your account.', 'success');
-    }
-    return { data, error };
-}
-
-/**
- * Handles user sign-in with email and password.
- * @param {string} email
- * @param {string} password
- */
-async function signIn(email, password) {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-        console.error('Sign In Error:', error.message);
-        showMessage('Error signing in: ' + error.message, 'error');
-    } else {
-        console.log('User signed in:', data.user);
-        showMessage('Welcome back!', 'success');
-    }
-    return { data, error };
-}
-
-/**
- * Handles user sign-out.
- */
-async function signOut() {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-        console.error('Sign Out Error:', error.message);
-        showMessage('Error signing out: ' + error.message, 'error');
-    } else {
-        console.log('User signed out.');
-        showMessage('You have been logged out.', 'info');
-    }
-}
-
-// Function to display messages to the user (existing)
+// --- Non-functional Auth Placeholder Functions ---
+// These functions exist for UI consistency but do not interact with a backend.
 function showMessage(message, type = 'info') {
     console.log(`[${type.toUpperCase()}]: ${message}`);
     if (messageContainer) {
@@ -115,302 +215,46 @@ function showMessage(message, type = 'info') {
     }
 }
 
-
-// --- MODIFIED UI State Management Functions ---
-/**
- * Shows the login form and hides other auth actions/forms.
- */
 function showLoginForm() {
-    console.log("showLoginForm called.");
-    authActionsDiv.classList.add('hidden'); // Hide Login/Signup buttons
-    authFormsDiv.classList.remove('hidden'); // Show the forms container
-    loginFormDiv.classList.remove('hidden'); // Show login form
-    signupFormDiv.classList.add('hidden'); // Hide signup form
-    messageContainer.textContent = ''; // Clear messages
+    authFormsDiv.classList.remove('hidden');
+    loginFormDiv.classList.remove('hidden');
+    signupFormDiv.classList.add('hidden');
+    authActionsDiv.classList.add('hidden');
+    showMessage('Login form is for display only in this demo.', 'info');
 }
 
-/**
- * Shows the sign-up form and hides other auth actions/forms.
- */
 function showSignupForm() {
-    console.log("showSignupForm called.");
-    authActionsDiv.classList.add('hidden'); // Hide Login/Signup buttons
-    authFormsDiv.classList.remove('hidden'); // Show the forms container
-    signupFormDiv.classList.remove('hidden'); // Show signup form
-    loginFormDiv.classList.add('hidden'); // Hide login form
-    messageContainer.textContent = ''; // Clear messages
+    authFormsDiv.classList.remove('hidden');
+    signupFormDiv.classList.remove('hidden');
+    loginFormDiv.classList.add('hidden');
+    authActionsDiv.classList.add('hidden');
+    showMessage('Sign Up form is for display only in this demo.', 'info');
 }
 
-/**
- * Handles user login form submission.
- */
-async function handleLogin() {
-    const email = loginEmailInput.value;
-    const password = loginPasswordInput.value;
-    console.log('Attempting to log in with:', email);
-    await signIn(email, password);
+function updateAuthUI() {
+    // In this dummy version, we always show "Not logged in"
+    // and the Login/Signup buttons by default.
+    authStatusDiv.innerHTML = `Not logged in.`;
+    authActionsDiv.classList.remove('hidden');
+    showLoginBtn.classList.remove('hidden');
+    showSignupBtn.classList.remove('hidden');
+    logoutBtn.classList.add('hidden');
+    authFormsDiv.classList.add('hidden'); // Keep forms hidden until clicked
+    profileCreationSection.classList.add('hidden'); // Hide profile creation
+    addServiceSection.classList.add('hidden'); // Hide add service
+    messageContainer.textContent = ''; // Clear message
 }
 
-/**
- * Handles user sign-up form submission.
- */
-async function handleSignUp() {
-    const email = signupEmailInput.value;
-    const password = signupPasswordInput.value;
-    console.log('Attempting to sign up with:', email);
-    await signUp(email, password);
-}
-
-
-// Supabase Data Fetching Functions
-/**
- * Fetches all seller data from Supabase and updates the global sellerData array.
- * This function will also trigger rendering of cards and tags.
- */
-async function fetchAllSellerData() {
-    const { data: profiles, error: profilesError } = await supabase
-        .from('seller_profiles')
-        .select(`
-            id,
-            user_id,
-            company_name,
-            bio,
-            contact_info,
-            services ( id, name, description, price_range, tags ),
-            products ( id, name, description, price, stock ),
-            external_links ( id, platform_name, url )
-        `);
-
-    if (profilesError) {
-        console.error('Error fetching seller profiles:', profilesError.message);
-        showMessage('Error loading seller profiles.', 'error');
-        return;
-    }
-
-    sellerData = profiles.map(profile => ({
-        id: profile.id,
-        userId: profile.user_id,
-        companyName: profile.company_name,
-        bio: profile.bio,
-        contactInfo: profile.contact_info,
-        services: profile.services || [],
-        products: profile.products || [],
-        externalLinks: profile.external_links || []
-    }));
-
+// --- Dummy Data Fetching (mimics real data fetching but uses local array) ---
+function fetchAllSellerData() {
+    // In a real app, this would be an async call to Supabase.
+    // Here, we just use the pre-defined dummyData.
     renderSellerCards();
     renderTagsSidebar();
 }
 
-/**
- * Fetches the seller profile for the currently logged-in user.
- * This would be used to determine if a user needs to create a profile or can add services.
- */
-async function fetchSellerProfileForCurrentUser() {
-    if (!activeUser) {
-        console.log("No active user to fetch seller profile for.");
-        return null;
-    }
-    const { data, error } = await supabase
-        .from('seller_profiles')
-        .select('id')
-        .eq('user_id', activeUser.id)
-        .single();
 
-    if (error && error.code !== 'PGRST116') { // PGRST116 is "No rows found"
-        console.error('Error fetching current user\'s seller profile:', error.message);
-        return null;
-    }
-
-    if (data) {
-        console.log('Current user\'s seller profile:', data);
-        return data;
-    } else {
-        console.log('Current user does not have a seller profile yet.');
-        return null;
-    }
-}
-
-
-// Seller Profile and Service Management Functions
-/**
- * Creates a new seller profile for the logged-in user.
- */
-async function createSellerProfile(profileData) {
-    if (!activeUser) {
-        profileMessageDiv.textContent = 'Error: You must be logged in to create a profile.';
-        profileMessageDiv.className = 'mt-4 text-center text-red-700';
-        return;
-    }
-    const { data, error } = await supabase
-        .from('seller_profiles')
-        .insert({
-            user_id: activeUser.id,
-            company_name: profileData.companyName,
-            bio: profileData.bio,
-            contact_info: profileData.contactInfo
-        })
-        .select();
-
-    if (error) {
-        console.error('Error creating profile:', error.message);
-        profileMessageDiv.textContent = 'Error creating profile: ' + error.message;
-        profileMessageDiv.className = 'mt-4 text-center text-red-700';
-    } else {
-        console.log('Profile created:', data);
-        profileMessageDiv.textContent = 'Seller profile created successfully!';
-        profileMessageDiv.className = 'mt-4 text-center text-green-700';
-        // Clear form
-        profileCompanyNameInput.value = '';
-        profileBioInput.value = '';
-        profileContactInfoInput.value = '';
-
-        await fetchAllSellerData();
-        updateAuthUI(); // Re-evaluate and update UI after profile creation
-    }
-}
-
-/**
- * Handles seller profile creation form submission.
- */
-async function handleCreateSellerProfile() {
-    const companyName = profileCompanyNameInput.value;
-    const bio = profileBioInput.value;
-    const contactInfo = profileContactInfoInput.value;
-
-    if (!companyName) {
-        profileMessageDiv.textContent = 'Company Name is required!';
-        profileMessageDiv.className = 'mt-4 text-center text-red-700';
-        return;
-    }
-
-    await createSellerProfile({ companyName, bio, contactInfo });
-}
-
-/**
- * Adds a new service to the current user's seller profile.
- */
-async function addServiceToProfile(serviceData) {
-    if (!activeUser) {
-        serviceMessageDiv.textContent = 'Error: You must be logged in to add a service.';
-        serviceMessageDiv.className = 'mt-4 text-center text-red-700';
-        return;
-    }
-
-    const { data: sellerProfile, error: profileError } = await supabase
-        .from('seller_profiles')
-        .select('id')
-        .eq('user_id', activeUser.id)
-        .single();
-
-    if (profileError || !sellerProfile) {
-        console.error('Error fetching seller profile for current user:', profileError?.message || 'Profile not found.');
-        serviceMessageDiv.textContent = 'Error: Could not find your seller profile. Please create one first.';
-        serviceMessageDiv.className = 'mt-4 text-center text-red-700';
-        return;
-    }
-
-    // Process tags: Split by comma, trim whitespace, filter out empty strings.
-    // If the resulting array is empty, send null to Supabase.
-    const processedTags = serviceData.tags
-        .split(',')
-        .map(tag => tag.trim())
-        .filter(tag => tag !== '');
-
-    const tagsToSend = processedTags.length > 0 ? processedTags : null; // Send null if no tags
-
-    const { data, error } = await supabase
-        .from('services')
-        .insert({
-            seller_profile_id: sellerProfile.id,
-            name: serviceData.name,
-            description: serviceData.description,
-            price_range: serviceData.priceRange,
-            tags: tagsToSend, // Use the processed tags or null
-        })
-        .select();
-
-    if (error) {
-        console.error('Error adding service:', error.message);
-        serviceMessageDiv.textContent = 'Error adding service: ' + error.message;
-        serviceMessageDiv.className = 'mt-4 text-center text-red-700';
-    } else {
-        console.log('Service added:', data);
-        serviceMessageDiv.textContent = 'Service added successfully!';
-        serviceMessageDiv.className = 'mt-4 text-center text-green-700';
-        // Clear form
-        serviceNameInput.value = '';
-        serviceDescriptionInput.value = '';
-        servicePriceRangeInput.value = '';
-        serviceTagsInput.value = '';
-
-        await fetchAllSellerData(); // Re-fetch all data to ensure new service appears
-    }
-}
-
-/**
- * Handles add service form submission.
- */
-async function handleAddService() {
-    const name = serviceNameInput.value;
-    const description = serviceDescriptionInput.value;
-    const priceRange = servicePriceRangeInput.value;
-    const tags = serviceTagsInput.value; // Get raw tags string
-
-    if (!name || !description || !priceRange) {
-        serviceMessageDiv.textContent = 'Service Name, Description, and Price Range are required!';
-        serviceMessageDiv.className = 'mt-4 text-center text-red-700';
-        return;
-    }
-
-    await addServiceToProfile({ name, description, priceRange, tags });
-}
-
-
-/**
- * Updates the UI to reflect authentication and profile status.
- * This is the central function for managing UI visibility.
- */
-async function updateAuthUI() {
-    console.log("updateAuthUI called. activeUser:", activeUser ? activeUser.email : "null");
-
-    if (activeUser) {
-        // User is logged in
-        authStatusDiv.innerHTML = `Logged in as: <span class="font-semibold">${activeUser.email}</span>`; // Display status without buttons here
-        authActionsDiv.classList.add('hidden'); // Hide the main action buttons (Login/Signup)
-        logoutBtn.classList.remove('hidden'); // Show logout button
-        authFormsDiv.classList.add('hidden'); // Hide login/signup forms (if open)
-
-        const userProfile = await fetchSellerProfileForCurrentUser(); // Check if user has a profile
-        if (userProfile) {
-            console.log("User has profile. Showing Add Service.");
-            profileCreationSection.classList.add('hidden'); // Hide profile creation
-            addServiceSection.classList.remove('hidden'); // Show add service section
-        } else {
-            console.log("User does NOT have profile. Showing Create Profile.");
-            profileCreationSection.classList.remove('hidden'); // Show profile creation
-            addServiceSection.classList.add('hidden'); // Hide add service section
-        }
-    } else {
-        // User is NOT logged in
-        authStatusDiv.innerHTML = `Not logged in.`;
-        authActionsDiv.classList.remove('hidden'); // Show the main action buttons
-        showLoginBtn.classList.remove('hidden'); // Ensure Login button is visible
-        showSignupBtn.classList.remove('hidden'); // Ensure Sign Up button is visible
-        logoutBtn.classList.add('hidden'); // Hide Logout button
-        authFormsDiv.classList.add('hidden'); // Ensure forms are hidden initially
-        loginFormDiv.classList.add('hidden'); // Explicitly hide login form
-        signupFormDiv.classList.add('hidden'); // Explicitly hide signup form
-
-        profileCreationSection.classList.add('hidden'); // Hide profile creation
-        addServiceSection.classList.add('hidden'); // Hide add service
-        messageContainer.textContent = ''; // Clear message when logged out
-        console.log("User logged out. Showing initial auth actions.");
-    }
-}
-
-
-// Your existing rendering and filtering functions
+// Your existing rendering and filtering functions (adapted for dummy data)
 /**
  * Renders all seller profile cards on the page.
  */
@@ -629,39 +473,23 @@ function updateTagSelectionUI() {
 }
 
 
-// Modified DOMContentLoaded Listener
+// DOMContentLoaded Listener
 document.addEventListener('DOMContentLoaded', () => {
     // Attach event listeners to search input field
     document.getElementById('searchInput').addEventListener('keyup', filterSellers);
 
-    // Attach event listeners for auth action buttons
+    // Attach event listeners for auth action buttons (now just for UI state change, no backend)
     if (showLoginBtn) showLoginBtn.addEventListener('click', showLoginForm);
     if (showSignupBtn) showSignupBtn.addEventListener('click', showSignupForm);
-    if (logoutBtn) logoutBtn.addEventListener('click', signOut);
-
-    // Supabase auth state change listener
-    supabase.auth.onAuthStateChange((event, session) => {
-        if (session) {
-            activeUser = session.user;
-            console.log('Auth state changed: Logged in', activeUser);
-        } else {
-            activeUser = null;
-            console.log('Auth state changed: Logged out');
-        }
-        updateAuthUI(); // Always update auth UI
-        fetchAllSellerData(); // Always fetch all seller data
+    // Logout button won't be visible in this dummy version, but keeping the listener for completeness
+    if (logoutBtn) logoutBtn.addEventListener('click', () => {
+        updateAuthUI(); // Just reset auth UI state
+        showMessage('You have been "logged out" (dummy action).', 'info');
     });
 
-    // Manually trigger the initial auth state check and data fetch
-    supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session) {
-            activeUser = session.user;
-        } else {
-            activeUser = null;
-        }
-        updateAuthUI();
-        fetchAllSellerData();
-    });
+    // Manually trigger the initial rendering with dummy data
+    updateAuthUI(); // Initialize auth UI (will show "Not logged in")
+    fetchAllSellerData(); // Populate cards and tags with dummy data
 
     // Close modal when clicking outside of the content
     sellerDetailModal.addEventListener('click', (event) => {

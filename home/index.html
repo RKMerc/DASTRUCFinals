@@ -3,57 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seller Hub</title>
+    <title>TambayanPH (Dummy Data)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JavaScript SDK (Moved BEFORE script.js for proper loading order) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Link to external CSS file (now in the same folder) -->
+    <!-- Link to external CSS file -->
     <link rel="stylesheet" href="style.css">
-    <!-- Link to external JavaScript file (now in the same folder) -->
+    <!-- Link to external JavaScript file (will use dummy data) -->
     <script src="script.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="min-h-screen flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8">
 
-    <!-- Authentication UI (fixed top-right) -->
+    <!-- Authentication UI (fixed top-right - non-functional in this dummy version) -->
     <div class="fixed top-4 right-4 bg-white p-4 rounded-xl shadow-lg z-50 max-w-xs w-full sm:w-auto">
-        <div id="authStatus" class="mb-2 text-gray-700 text-center font-semibold"></div>
+        <div id="authStatus" class="mb-2 text-gray-700 text-center font-semibold">Not logged in.</div>
 
-        <!-- New container for Login/Signup/Logout action buttons -->
-        <!-- These buttons will be visible when not logged in, and hidden when forms are open or logged in -->
+        <!-- Action buttons (visible but non-functional for dummy data) -->
         <div id="authActions" class="text-center mb-4">
-            <button id="showLoginBtn" onclick="showLoginForm()" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 shadow-sm mr-2">Login</button>
-            <button id="showSignupBtn" onclick="showSignupForm()" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 transition duration-200 shadow-sm">Sign Up</button>
-            <button id="logoutBtn" onclick="signOut()" class="hidden bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200 shadow-sm">Logout</button>
+            <button id="showLoginBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 shadow-sm mr-2">Login</button>
+            <button id="showSignupBtn" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 transition duration-200 shadow-sm">Sign Up</button>
+            <button id="logoutBtn" class="hidden bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200 shadow-sm">Logout</button>
         </div>
 
-        <div id="authForms" class="space-y-4 hidden"> <!-- Initially hidden forms container -->
-            <!-- Login Form -->
+        <!-- Forms (initially hidden, will not function in this dummy version) -->
+        <div id="authForms" class="space-y-4 hidden">
             <div id="loginForm">
-                <h3 class="text-xl font-semibold mb-2 text-gray-800 text-center">Login</h3>
+                <h3 class="text-xl font-semibold mb-2 text-gray-800 text-center">Login (Dummy)</h3>
                 <input type="email" id="loginEmail" placeholder="Email" class="w-full p-2 border border-gray-300 rounded-md mb-2 focus:ring-blue-500 focus:border-blue-500">
                 <input type="password" id="loginPassword" placeholder="Password" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-blue-500 focus:border-blue-500">
-                <button onclick="handleLogin()" class="w-full bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition duration-200 ease-in-out shadow-sm">Login</button>
+                <button class="w-full bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition duration-200 ease-in-out shadow-sm">Login (Dummy)</button>
                 <p class="text-sm text-center mt-2 text-gray-600">No account? <button onclick="showSignupForm()" class="text-blue-600 hover:underline font-medium">Sign Up</button></p>
             </div>
 
-            <!-- Sign Up Form -->
             <div id="signupForm" class="hidden">
-                <h3 class="text-xl font-semibold mb-2 text-gray-800 text-center">Sign Up</h3>
+                <h3 class="text-xl font-semibold mb-2 text-gray-800 text-center">Sign Up (Dummy)</h3>
                 <input type="email" id="signupEmail" placeholder="Email" class="w-full p-2 border border-gray-300 rounded-md mb-2 focus:ring-purple-500 focus:border-purple-500">
                 <input type="password" id="signupPassword" placeholder="Password" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-purple-500 focus:border-purple-500">
-                <button onclick="handleSignUp()" class="w-full bg-purple-500 text-white p-2 rounded-md hover:bg-purple-600 transition duration-200 ease-in-out shadow-sm">Sign Up</button>
+                <button class="w-full bg-purple-500 text-white p-2 rounded-md hover:bg-purple-600 transition duration-200 ease-in-out shadow-sm">Sign Up (Dummy)</button>
                 <p class="text-sm text-center mt-2 text-gray-600">Already have an account? <button onclick="showLoginForm()" class="text-blue-600 hover:underline font-medium">Login</button></p>
             </div>
         </div>
-        <!-- Message container for sign-up/login feedback -->
         <div id="messageContainer" class="mt-4 p-2 text-center text-sm font-medium rounded-md"></div>
     </div>
 
 
     <div class="max-w-7xl w-full mx-auto flex flex-col gap-8">
-        <!-- Header Section (always at the top) -->
+        <!-- Header Section -->
         <header class="text-center mb-8">
             <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-4">
                 Welcome to the Seller Hub
@@ -77,9 +72,8 @@
         </div>
 
         <!-- Content Area: Sidebar and Seller Cards -->
-        <div class="flex flex-col lg:flex-row gap-8 pt-4"> <!-- pt-4 to prevent content from going under sticky elements -->
+        <div class="flex flex-col lg:flex-row gap-8 pt-4">
             <!-- Sidebar for Tags (Sticky, below search bar) -->
-            <!-- Adjusted top value to account for the sticky search bar's height (~90px) -->
             <aside class="w-full lg:w-1/4 xl:w-1/5 bg-white rounded-xl shadow-lg p-6 sticky top-[90px] self-start h-fit z-10">
                 <h2 class="text-2xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Filter by Tag</h2>
                 <ul id="tagList" class="space-y-2">
@@ -89,28 +83,29 @@
 
             <!-- Main content for forms and seller cards -->
             <main class="w-full lg:w-3/4 xl:w-4/5">
-                <!-- Seller Profile Creation Section (Hidden by default) -->
+                <!-- Seller Profile Creation Section (Hidden - non-functional in dummy version) -->
                 <div id="profileCreationSection" class="hidden bg-white rounded-xl shadow-lg p-6 mb-8 text-center border border-gray-200">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Create Your Seller Profile</h2>
-                    <p class="text-gray-600 mb-4">You need a seller profile before you can add services or products.</p>
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Create Your Seller Profile (Dummy)</h2>
+                    <p class="text-gray-600 mb-4">This form is for display purposes only in this dummy version.</p>
                     <input type="text" id="profileCompanyName" placeholder="Company Name" class="w-full p-2 border border-gray-300 rounded-md mb-2 focus:ring-blue-500 focus:border-blue-500">
                     <textarea id="profileBio" placeholder="Bio (e.g., 'Passionate artisan specializing in...') " rows="3" class="w-full p-2 border border-gray-300 rounded-md mb-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
                     <input type="text" id="profileContactInfo" placeholder="Contact Info (Email | Phone)" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-blue-500 focus:border-blue-500">
-                    <button onclick="handleCreateSellerProfile()" class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition duration-300 ease-in-out shadow-md">
-                        Create Profile
+                    <button class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition duration-300 ease-in-out shadow-md">
+                        Create Profile (Dummy)
                     </button>
                     <div id="profileMessage" class="mt-4 p-2 text-center text-sm font-medium rounded-md"></div>
                 </div>
 
-                <!-- Add Service Section (Hidden by default) -->
+                <!-- Add Service Section (Hidden - non-functional in dummy version) -->
                 <div id="addServiceSection" class="hidden bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Add a New Service</h2>
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Add a New Service (Dummy)</h2>
+                    <p class="text-gray-600 mb-4">This form is for display purposes only in this dummy version.</p>
                     <input type="text" id="serviceName" placeholder="Service Name (e.g., 'Local Delivery')" class="w-full p-2 border border-gray-300 rounded-md mb-2 focus:ring-green-500 focus:border-green-500">
                     <textarea id="serviceDescription" placeholder="Service Description" rows="3" class="w-full p-2 border border-gray-300 rounded-md mb-2 focus:ring-green-500 focus:border-green-500"></textarea>
                     <input type="text" id="servicePriceRange" placeholder="Price Range (e.g., '$5 - $15' or 'Starts at $20')" class="w-full p-2 border border-gray-300 rounded-md mb-2 focus:ring-green-500 focus:border-green-500">
                     <input type="text" id="serviceTags" placeholder="Tags (comma-separated, e.g., 'delivery, local')" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-green-500 focus:border-green-500">
-                    <button onclick="handleAddService()" class="px-6 py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition duration-300 ease-in-out shadow-md">
-                        Add Service
+                    <button class="px-6 py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition duration-300 ease-in-out shadow-md">
+                        Add Service (Dummy)
                     </button>
                     <div id="serviceMessage" class="mt-4 p-2 text-center text-sm font-medium rounded-md"></div>
                 </div>
@@ -134,7 +129,7 @@
                     <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
-            <div class="overflow-y-scroll max-h-96 pr-4"> <!-- Added scroll for long content -->
+            <div class="overflow-y-scroll max-h-96 pr-4">
                 <p id="modalBio" class="text-gray-700 mb-4"></p>
                 <p id="modalContactInfo" class="text-gray-600 text-sm mb-6"></p>
 
