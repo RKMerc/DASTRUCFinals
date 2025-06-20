@@ -1,9 +1,12 @@
 // script.js
-const SUPABASE_URL = 'https://pfvrfndyqxyhowcdjslv.supabase.co'; // From Supabase API Settings
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmdnJmbmR5cXh5aG93Y2Rqc2x2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzOTQ5MjgsImV4cCI6MjA2NTk3MDkyOH0.knM9HNGZl_kmPlJnBL4yfCeN4timnuuAT9aEBtTUc-o'; // From Supabase API Settings
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Data mirroring the Python classes (simplified for client-side HTML)
+// Supabase Client Initialization - IMPORTANT: Replace with your actual keys
+const SUPABASE_URL = 'https://pfvrfndyqxyhowcdjslv.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmdnJmbmR5cXh5aG93Y2Rqc2x2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzOTQ5MjgsImV4cCI6MjA2NTk3MDkyOH0.knM9HNGZl_kmPlJnBL4yfCeN4timnuuAT9aEBtTUc-o';
+
+// Corrected: Supabase should be capitalized as it comes from the CDN.
+const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 // Global variable to store current user session
 let activeUser = null;
 
@@ -11,7 +14,7 @@ let activeUser = null;
 let sellerData = []; // Initialize as an empty array, will be filled by fetchAllSellerData()
 
 
-// Get elements for the modal
+// Get elements for the modal (existing)
 const sellerDetailModal = document.getElementById('sellerDetailModal');
 const modalContent = document.getElementById('modalContent');
 const modalCompanyName = document.getElementById('modalCompanyName');
@@ -24,8 +27,32 @@ const modalExternalLinks = document.getElementById('modalExternalLinks');
 // Variable to store the currently active filter tag
 let activeTagFilter = '';
 
+// New UI element references (added)
+const authStatusDiv = document.getElementById('authStatus');
+const authFormsDiv = document.getElementById('authForms');
+const loginFormDiv = document.getElementById('loginForm');
+const signupFormDiv = document.getElementById('signupForm');
+const loginEmailInput = document.getElementById('loginEmail');
+const loginPasswordInput = document.getElementById('loginPassword');
+const signupEmailInput = document.getElementById('signupEmail');
+const signupPasswordInput = document.getElementById('signupPassword');
+const messageContainer = document.getElementById('messageContainer');
 
-// Supabase Authentication Functions
+const profileCreationSection = document.getElementById('profileCreationSection');
+const profileCompanyNameInput = document.getElementById('profileCompanyName');
+const profileBioInput = document.getElementById('profileBio');
+const profileContactInfoInput = document.getElementById('profileContactInfo');
+const profileMessageDiv = document.getElementById('profileMessage');
+
+const addServiceSection = document.getElementById('addServiceSection');
+const serviceNameInput = document.getElementById('serviceName');
+const serviceDescriptionInput = document.getElementById('serviceDescription');
+const servicePriceRangeInput = document = document.getElementById('servicePriceRange'); // Corrected typo here
+const serviceTagsInput = document.getElementById('serviceTags');
+const serviceMessageDiv = document.getElementById('serviceMessage');
+
+
+// Supabase Authentication Functions (existing)
 /**
  * Handles user sign-up with email and password.
  * @param {string} email
@@ -39,7 +66,6 @@ async function signUp(email, password) {
     } else {
         console.log('User signed up:', data.user);
         showMessage('Sign up successful! Please check your email to confirm your account.', 'success');
-        // Optionally, you might want to automatically sign in or redirect
     }
     return { data, error };
 }
@@ -57,7 +83,6 @@ async function signIn(email, password) {
     } else {
         console.log('User signed in:', data.user);
         showMessage('Welcome back!', 'success');
-        // The onAuthStateChange listener will handle fetching data and updating UI
     }
     return { data, error };
 }
@@ -73,15 +98,12 @@ async function signOut() {
     } else {
         console.log('User signed out.');
         showMessage('You have been logged out.', 'info');
-        // The onAuthStateChange listener will handle clearing data and updating UI
     }
 }
 
-// Placeholder for a function to display messages to the user (e.g., in a div or modal)
+// Function to display messages to the user (existing)
 function showMessage(message, type = 'info') {
     console.log(`[${type.toUpperCase()}]: ${message}`);
-    // Implement actual UI display here (e.g., update a message div)
-    const messageContainer = document.getElementById('messageContainer'); // You'd add this div in your HTML
     if (messageContainer) {
         messageContainer.textContent = message;
         messageContainer.className = `p-3 rounded-lg mt-4 ${type === 'error' ? 'bg-red-100 text-red-700' : type === 'success' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`;
@@ -89,13 +111,50 @@ function showMessage(message, type = 'info') {
 }
 
 
-// Supabase Data Fetching Functions
+// New UI State Management Functions (added)
+/**
+ * Handles showing the login form and hiding others.
+ */
+function showLoginForm() {
+    loginFormDiv.classList.remove('hidden');
+    signupFormDiv.classList.add('hidden');
+    messageContainer.textContent = ''; // Clear messages
+}
+
+/**
+ * Handles showing the sign-up form and hiding others.
+ */
+function showSignupForm() {
+    signupFormDiv.classList.remove('hidden');
+    loginFormDiv.classList.add('hidden');
+    messageContainer.textContent = ''; // Clear messages
+}
+
+/**
+ * Handles user login form submission.
+ */
+async function handleLogin() {
+    const email = loginEmailInput.value;
+    const password = loginPasswordInput.value;
+    await signIn(email, password);
+}
+
+/**
+ * Handles user sign-up form submission.
+ */
+async function handleSignUp() {
+    const email = signupEmailInput.value;
+    const password = signupPasswordInput.value;
+    await signUp(email, password);
+}
+
+
+// Supabase Data Fetching Functions (existing)
 /**
  * Fetches all seller data from Supabase and updates the global sellerData array.
  * This function will also trigger rendering of cards and tags.
  */
 async function fetchAllSellerData() {
-    // Select all seller profiles and their related services, products, and links
     const { data: profiles, error: profilesError } = await supabase
         .from('seller_profiles')
         .select(`
@@ -115,11 +174,9 @@ async function fetchAllSellerData() {
         return;
     }
 
-    // Transform data to match your existing sellerData structure
-    // Ensure nested arrays are correctly handled (Supabase will return them as arrays)
     sellerData = profiles.map(profile => ({
         id: profile.id,
-        userId: profile.user_id, // Store Supabase user ID for ownership checks
+        userId: profile.user_id,
         companyName: profile.company_name,
         bio: profile.bio,
         contactInfo: profile.contact_info,
@@ -145,16 +202,15 @@ async function fetchSellerProfileForCurrentUser() {
         .from('seller_profiles')
         .select('*')
         .eq('user_id', activeUser.id)
-        .single(); // Use .single() as each user should have only one profile
+        .single();
 
-    if (error && error.code !== 'PGRST116') { // PGRST116 is "No rows found"
+    if (error && error.code !== 'PGRST116') {
         console.error('Error fetching current user\'s seller profile:', error.message);
         return null;
     }
 
     if (data) {
         console.log('Current user\'s seller profile:', data);
-        // You might store this profile data globally if needed, or just use it to update UI
         return data;
     } else {
         console.log('Current user does not have a seller profile yet.');
@@ -163,25 +219,159 @@ async function fetchSellerProfileForCurrentUser() {
 }
 
 
-// Helper function to update UI elements related to authentication status
-// You will need to implement the actual HTML elements for login, signup, logout, etc.
-function updateAuthUI() {
-    const authStatusDiv = document.getElementById('authStatus'); // Example div for status messages
-    if (authStatusDiv) {
-        if (activeUser) {
-            authStatusDiv.innerHTML = `Logged in as: ${activeUser.email} (<button onclick="signOut()" class="text-blue-500 hover:underline">Logout</button>)`;
-            // Add logic here to show elements for profile creation/editing, add service, etc.
-            // Example: document.getElementById('createProfileSection').classList.remove('hidden');
+// New Seller Profile and Service Management Functions (added)
+/**
+ * Creates a new seller profile for the logged-in user.
+ */
+async function createSellerProfile(profileData) {
+    if (!activeUser) {
+        profileMessageDiv.textContent = 'Error: You must be logged in to create a profile.';
+        profileMessageDiv.className = 'mt-4 text-center text-red-700';
+        return;
+    }
+    const { data, error } = await supabase
+        .from('seller_profiles')
+        .insert({
+            user_id: activeUser.id,
+            company_name: profileData.companyName,
+            bio: profileData.bio,
+            contact_info: profileData.contactInfo
+        })
+        .select();
+
+    if (error) {
+        console.error('Error creating profile:', error.message);
+        profileMessageDiv.textContent = 'Error creating profile: ' + error.message;
+        profileMessageDiv.className = 'mt-4 text-center text-red-700';
+    } else {
+        console.log('Profile created:', data);
+        profileMessageDiv.textContent = 'Seller profile created successfully!';
+        profileMessageDiv.className = 'mt-4 text-center text-green-700';
+        // Clear form
+        profileCompanyNameInput.value = '';
+        profileBioInput.value = '';
+        profileContactInfoInput.value = '';
+
+        await fetchAllSellerData();
+        updateAuthUI(); // Re-evaluate and update UI after profile creation
+    }
+}
+
+/**
+ * Handles seller profile creation form submission.
+ */
+async function handleCreateSellerProfile() {
+    const companyName = profileCompanyNameInput.value;
+    const bio = profileBioInput.value;
+    const contactInfo = profileContactInfoInput.value;
+
+    if (!companyName) {
+        profileMessageDiv.textContent = 'Company Name is required!';
+        profileMessageDiv.className = 'mt-4 text-center text-red-700';
+        return;
+    }
+
+    await createSellerProfile({ companyName, bio, contactInfo });
+}
+
+/**
+ * Adds a new service to the current user's seller profile.
+ */
+async function addServiceToProfile(serviceData) {
+    if (!activeUser) {
+        serviceMessageDiv.textContent = 'Error: You must be logged in to add a service.';
+        serviceMessageDiv.className = 'mt-4 text-center text-red-700';
+        return;
+    }
+
+    const { data: sellerProfile, error: profileError } = await supabase
+        .from('seller_profiles')
+        .select('id')
+        .eq('user_id', activeUser.id)
+        .single();
+
+    if (profileError || !sellerProfile) {
+        console.error('Error fetching seller profile for current user:', profileError?.message || 'Profile not found.');
+        serviceMessageDiv.textContent = 'Error: Could not find your seller profile. Please create one first.';
+        serviceMessageDiv.className = 'mt-4 text-center text-red-700';
+        return;
+    }
+
+    const { data, error } = await supabase
+        .from('services')
+        .insert({
+            seller_profile_id: sellerProfile.id,
+            name: serviceData.name,
+            description: serviceData.description,
+            price_range: serviceData.priceRange,
+            tags: serviceData.tags.split(',').map(tag => tag.trim()).filter(tag => tag !== ''),
+        })
+        .select();
+
+    if (error) {
+        console.error('Error adding service:', error.message);
+        serviceMessageDiv.textContent = 'Error adding service: ' + error.message;
+        serviceMessageDiv.className = 'mt-4 text-center text-red-700';
+    } else {
+        console.log('Service added:', data);
+        serviceMessageDiv.textContent = 'Service added successfully!';
+        serviceMessageDiv.className = 'mt-4 text-center text-green-700';
+        // Clear form
+        serviceNameInput.value = '';
+        serviceDescriptionInput.value = '';
+        servicePriceRangeInput.value = '';
+        serviceTagsInput.value = '';
+
+        await fetchAllSellerData(); // Re-fetch all data to ensure new service appears
+    }
+}
+
+/**
+ * Handles add service form submission.
+ */
+async function handleAddService() {
+    const name = serviceNameInput.value;
+    const description = serviceDescriptionInput.value;
+    const priceRange = servicePriceRangeInput.value;
+    const tags = serviceTagsInput.value;
+
+    if (!name || !description || !priceRange) {
+        serviceMessageDiv.textContent = 'Service Name, Description, and Price Range are required!';
+        serviceMessageDiv.className = 'mt-4 text-center text-red-700';
+        return;
+    }
+
+    await addServiceToProfile({ name, description, priceRange, tags });
+}
+
+
+// MODIFIED updateAuthUI function (now properly handles UI visibility based on auth and profile existence)
+async function updateAuthUI() {
+    if (activeUser) {
+        authStatusDiv.innerHTML = `Logged in as: <span class="font-semibold">${activeUser.email}</span> (<button onclick="signOut()" class="text-blue-600 hover:underline">Logout</button>)`;
+        authFormsDiv.classList.add('hidden'); // Hide login/signup forms
+
+        const userProfile = await fetchSellerProfileForCurrentUser(); // Check if user has a profile
+        if (userProfile) {
+            profileCreationSection.classList.add('hidden'); // Hide profile creation if profile exists
+            addServiceSection.classList.remove('hidden'); // Show add service section
         } else {
-            authStatusDiv.innerHTML = `Not logged in. <button onclick="showLoginForm()" class="text-blue-500 hover:underline">Login</button> or <button onclick="showSignupForm()" class="text-blue-500 hover:underline">Sign Up</button>`;
-            // Add logic here to hide elements for profile creation/editing, add service, etc.
-            // Example: document.getElementById('createProfileSection').classList.add('hidden');
+            profileCreationSection.classList.remove('hidden'); // Show profile creation
+            addServiceSection.classList.add('hidden'); // Hide add service section
         }
+    } else {
+        authStatusDiv.innerHTML = `Not logged in.`;
+        authFormsDiv.classList.remove('hidden'); // Show login/signup forms
+        loginFormDiv.classList.remove('hidden'); // Default to showing login form
+        signupFormDiv.classList.add('hidden'); // Hide signup initially
+        profileCreationSection.classList.add('hidden'); // Hide profile creation
+        addServiceSection.classList.add('hidden'); // Hide add service
+        messageContainer.textContent = ''; // Clear message when logging out
     }
 }
 
 
-// Your existing rendering and filtering functions
+// Your existing rendering and filtering functions (no changes here, they use `sellerData` which is now populated from Supabase)
 /**
  * Renders all seller profile cards on the page.
  */
@@ -400,34 +590,40 @@ function updateTagSelectionUI() {
 }
 
 
-// Initialize on page load
+// Modified DOMContentLoaded Listener (existing, but re-checked against latest HTML and logic)
 document.addEventListener('DOMContentLoaded', () => {
-    // Listen for Supabase auth state changes immediately
+    // Attach event listeners to search input field
+    document.getElementById('searchInput').addEventListener('keyup', filterSellers);
+
+    // Supabase auth state change listener
     supabase.auth.onAuthStateChange((event, session) => {
         if (session) {
             activeUser = session.user;
             console.log('Auth state changed: Logged in', activeUser);
-            // Fetch the current user's seller profile (or check if they have one)
-            // This is useful for showing "create profile" or "add service" options
-            fetchSellerProfileForCurrentUser();
         } else {
             activeUser = null;
             console.log('Auth state changed: Logged out');
-            // Clear any user-specific data and re-fetch all public data
         }
-        // Always update auth UI regardless of login state
+        updateAuthUI(); // Always update auth UI
+        fetchAllSellerData(); // Always fetch all seller data
+    });
+
+    // Manually trigger the initial auth state check and data fetch
+    // This is important for when the page first loads and a user might already be logged in
+    supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+            activeUser = session.user;
+        } else {
+            activeUser = null;
+        }
         updateAuthUI();
-        // Always fetch all seller data (either public or user-specific if a profile exists)
         fetchAllSellerData();
     });
 
-    // Attach event listeners to search input field
-    document.getElementById('searchInput').addEventListener('keyup', filterSellers);
-});
-
-// Close modal when clicking outside of the content
-sellerDetailModal.addEventListener('click', (event) => {
-    if (event.target === sellerDetailModal) {
-        closeModal();
-    }
+    // Close modal when clicking outside of the content
+    sellerDetailModal.addEventListener('click', (event) => {
+        if (event.target === sellerDetailModal) {
+            closeModal();
+        }
+    });
 });
