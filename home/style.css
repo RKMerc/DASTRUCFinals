@@ -23,3 +23,11 @@ body {
 .overflow-y-scroll::-webkit-scrollbar-thumb:hover {
     background: #808080;
 }
+
+/* Custom grid utility to make columns fluid but prevent stretching of individual items */
+/* This will create columns that are at least 280px wide and fit as many as possible */
+/* Any remaining space is distributed evenly. This prevents items from overly stretching */
+/* when fewer items are visible in a row. */
+.grid-auto-fit-cols {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
