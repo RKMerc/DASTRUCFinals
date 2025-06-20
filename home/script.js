@@ -1,136 +1,15 @@
 // script.js
+const SUPABASE_URL = 'https://pfvrfndyqxyhowcdjslv.supabase.co'; // From Supabase API Settings
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmdnJmbmR5cXh5aG93Y2Rqc2x2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzOTQ5MjgsImV4cCI6MjA2NTk3MDkyOH0.knM9HNGZl_kmPlJnBL4yfCeN4timnuuAT9aEBtTUc-o'; // From Supabase API Settings
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Data mirroring the Python classes (simplified for client-side HTML)
-const sellerData = [
-    {
-        id: "S_PROF001",
-        companyName: "Alice's Handcrafted Goods",
-        bio: "Passionate artisan specializing in unique handmade jewelry and custom designs. Every piece is crafted with love and attention to detail, perfect for special gifts or personal treasures.",
-        contactInfo: "contact@alicecrafts.com | +63 917 123 4567",
-        services: [
-            { name: "Local Delivery", description: "Fast and reliable delivery within Bacoor and nearby areas.", priceRange: "$5 - $15", tags: ["delivery", "local", "quick"] },
-            { name: "Jewelry Design Consultation", description: "Personalized consultation for custom jewelry designs, bringing your unique ideas to life.", priceRange: "$50/hour", tags: ["consultation", "jewelry", "custom"] },
-            { name: "Repair Services", description: "Expert repair for all types of jewelry, ensuring your cherished pieces last a lifetime.", priceRange: "Starts at $20", tags: ["repair", "jewelry", "maintenance"] }
-        ],
-        products: [
-            { name: "Silver Pendant Necklace", description: "Hand-forged silver pendant with a unique design, hypoallergenic.", price: 75.00, stock: 10 },
-            { name: "Gemstone Drop Earrings", description: "Elegant earrings featuring natural gemstones, available in various stone types.", price: 45.50, stock: 25 },
-            { name: "Custom Engraved Bracelets", description: "Personalized bracelets with your chosen text or design.", price: 60.00, stock: 15 }
-        ],
-        externalLinks: [
-            { platformName: "Shopee Store", url: "https://shopee.ph/alices_crafts" },
-            { platformName: "Lazada Shop", url: "https://www.lazada.com.ph/shop/alices_crafts" },
-            { platformName: "Personal Website", url: "https://www.alicecrafts.com" }
-        ]
-    },
-    {
-        id: "S_PROF002",
-        companyName: "Tech Solutions Hub",
-        bio: "Your go-to for all tech support and gadget repair needs. We offer fast, reliable, and affordable solutions for homes and businesses.",
-        contactInfo: "support@techsol.com | +63 920 987 6543",
-        services: [
-            { name: "Computer Repair", description: "Diagnostic and repair for laptops and desktops, including hardware and software issues.", priceRange: "$30 - $150", tags: ["repair", "tech support", "computer"] },
-            { name: "Network Setup", description: "Professional home and office network installation and configuration.", priceRange: "$80 - $200", tags: ["network", "installation", "setup"] },
-            { name: "Software Installation", description: "Assistance with operating system and application installations.", priceRange: "$25/software", tags: ["software", "installation", "tech support"] }
-        ],
-        products: [
-            { name: "Wireless Routers", description: "High-speed Wi-Fi routers for seamless internet connectivity.", price: 120.00, stock: 50 },
-            { name: "USB-C Hubs", description: "Multi-port USB-C hubs for expanded device connectivity.", price: 35.00, stock: 100 }
-        ],
-        externalLinks: [
-            { platformName: "Website", url: "https://www.techsol.com" },
-            { platformName: "Facebook Page", url: "https://facebook.com/techsolutionshub" }
-        ]
-    },
-    {
-        id: "S_PROF003",
-        companyName: "Green Thumb Garden Supply",
-        bio: "Providing a wide range of plants, gardening tools, and expert advice for your green projects. Grow your dream garden with us!",
-        contactInfo: "info@greenthumb.ph | +63 998 112 2334",
-        services: [
-            { name: "Garden Consultation", description: "On-site garden planning and advice from experienced horticulturists.", priceRange: "$70/visit", tags: ["consultation", "garden", "planning"] },
-            { name: "Planting Services", description: "Assistance with planting and landscaping for small to medium gardens.", priceRange: "Quotation based", tags: ["planting", "landscaping", "garden"] }
-        ],
-        products: [
-            { name: "Organic Potting Mix", description: "Premium organic potting mix for healthy plant growth.", price: 15.00, stock: 200 },
-            { name: "Assorted Succulents", description: "Variety of easy-to-care-for succulent plants.", price: 8.00, stock: 150 },
-            { name: "Ergonomic Garden Tools Set", description: "Durable and comfortable tools for all your gardening needs.", price: 95.00, stock: 30 }
-        ],
-        externalLinks: [
-            { platformName: "Instagram", url: "https://instagram.com/greenthumbgardens" },
-            { platformName: "Lazada Shop", url: "https://www.lazada.com.ph/shop/greenthumb" }
-        ]
-    },
-    {
-        id: "S_PROF004",
-        companyName: "Pet Care Paradise",
-        bio: "Your one-stop shop for pet food, accessories, grooming services, and pet training. We love your pets as much as you do!",
-        contactInfo: "woof@petcare.com | +63 905 445 5667",
-        services: [
-            { name: "Pet Grooming", description: "Full grooming services for dogs and cats, including bathing, hair cut, and nail trimming.", priceRange: "$30 - $80", tags: ["grooming", "pet", "animal care"] },
-            { name: "Dog Training Classes", description: "Group and private dog training lessons for obedience and behavior.", priceRange: "$100/session", tags: ["training", "dog", "pet"] }
-        ],
-        products: [
-            { name: "Premium Dog Food", description: "High-quality, nutritious dog food for all breeds and sizes.", price: 50.00, stock: 100 },
-            { name: "Interactive Cat Toys", description: "Engaging and durable toys to keep your cat entertained.", price: 12.00, stock: 150 }
-        ],
-        externalLinks: [
-            { platformName: "Shopee Store", url: "https://shopee.ph/petcare_paradise" },
-            { platformName: "TikTok", url: "https://tiktok.com/@petcareparadise" }
-        ]
-    },
-    {
-        id: "S_PROF005",
-        companyName: "Artistic Creations Studio",
-        bio: "Unique hand-painted artworks and custom commissions. Bring beauty to your home with a piece crafted just for you.",
-        contactInfo: "artistic.creations@example.com | +63 977 123 9876",
-        services: [
-            { name: "Custom Portrait Painting", description: "Transform your photos into timeless oil or acrylic portraits.", priceRange: "$200 - $500", tags: ["art", "portrait", "custom", "painting"] },
-            { name: "Mural Painting", description: "Large-scale wall murals for homes, offices, and commercial spaces.", priceRange: "Quotation based", tags: ["mural", "art", "interior design"] }
-        ],
-        products: [
-            { name: "Abstract Canvas Prints", description: "High-quality prints of original abstract artworks, various sizes available.", price: 80.00, stock: 50 },
-            { name: "DIY Painting Kits", description: "All-inclusive kits for beginners to create their own masterpieces.", price: 30.00, stock: 75 }
-        ],
-        externalLinks: [
-            { platformName: "Portfolio Website", url: "https://www.artisticcreations.com" },
-            { platformName: "Instagram", url: "https://instagram.com/artistic_creations" }
-        ]
-    },
-    {
-        id: "S_PROF006",
-        companyName: "Healthy Bites Catering",
-        bio: "Wholesome and delicious catering services for events of all sizes. Specializing in healthy, organic, and dietary-friendly options.",
-        contactInfo: "info@healthybites.ph | +63 945 345 6789",
-        services: [
-            { name: "Event Catering", description: "Full-service catering for birthdays, corporate events, and gatherings.", priceRange: "Custom quotes", tags: ["catering", "event", "food"] },
-            { name: "Meal Prep Delivery", description: "Nutritious and ready-to-eat meals delivered to your doorstep weekly.", priceRange: "$70/week", tags: ["meal prep", "delivery", "healthy food"] }
-        ],
-        products: [
-            { name: "Organic Snack Boxes", description: "Curated boxes of healthy, organic snacks for daily enjoyment.", price: 25.00, stock: 100 },
-            { name: "Freshly Baked Whole Wheat Bread", description: "Artisan whole wheat bread, baked fresh daily.", price: 8.00, stock: 50 }
-        ],
-        externalLinks: [
-            { platformName: "Website", url: "https://www.healthybites.ph" },
-            { platformName: "Facebook", url: "https://facebook.com/healthybitescatering" }
-        ]
-    },
-    {
-        id: "S_PROF007",
-        companyName: "QuickFix Appliance Repair",
-        bio: "Fast and reliable repair services for all your home appliances. We fix refrigerators, washing machines, ovens, and more!",
-        contactInfo: "service@quickfix.com | +63 966 555 4444",
-        services: [
-            { name: "Washing Machine Repair", description: "Troubleshooting and repair for all washing machine brands and models.", priceRange: "$40 - $180", tags: ["repair", "appliance", "washing machine"] },
-            { name: "Refrigerator Maintenance", description: "Regular check-ups and minor repairs to keep your fridge running efficiently.", priceRange: "$50 - $120", tags: ["maintenance", "refrigerator", "appliance"] }
-        ],
-        products: [], // No products for this seller example
-        externalLinks: [
-            { platformName: "Website", url: "https://www.quickfixappliance.com" },
-            { platformName: "Service Hotline", url: "tel:+639665554444" }
-        ]
-    }
-];
+// Global variable to store current user session
+let activeUser = null;
+
+// This sellerData will now be dynamically populated from Supabase
+let sellerData = []; // Initialize as an empty array, will be filled by fetchAllSellerData()
+
 
 // Get elements for the modal
 const sellerDetailModal = document.getElementById('sellerDetailModal');
@@ -145,6 +24,164 @@ const modalExternalLinks = document.getElementById('modalExternalLinks');
 // Variable to store the currently active filter tag
 let activeTagFilter = '';
 
+
+// Supabase Authentication Functions
+/**
+ * Handles user sign-up with email and password.
+ * @param {string} email
+ * @param {string} password
+ */
+async function signUp(email, password) {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) {
+        console.error('Sign Up Error:', error.message);
+        showMessage('Error signing up: ' + error.message, 'error');
+    } else {
+        console.log('User signed up:', data.user);
+        showMessage('Sign up successful! Please check your email to confirm your account.', 'success');
+        // Optionally, you might want to automatically sign in or redirect
+    }
+    return { data, error };
+}
+
+/**
+ * Handles user sign-in with email and password.
+ * @param {string} email
+ * @param {string} password
+ */
+async function signIn(email, password) {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+        console.error('Sign In Error:', error.message);
+        showMessage('Error signing in: ' + error.message, 'error');
+    } else {
+        console.log('User signed in:', data.user);
+        showMessage('Welcome back!', 'success');
+        // The onAuthStateChange listener will handle fetching data and updating UI
+    }
+    return { data, error };
+}
+
+/**
+ * Handles user sign-out.
+ */
+async function signOut() {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+        console.error('Sign Out Error:', error.message);
+        showMessage('Error signing out: ' + error.message, 'error');
+    } else {
+        console.log('User signed out.');
+        showMessage('You have been logged out.', 'info');
+        // The onAuthStateChange listener will handle clearing data and updating UI
+    }
+}
+
+// Placeholder for a function to display messages to the user (e.g., in a div or modal)
+function showMessage(message, type = 'info') {
+    console.log(`[${type.toUpperCase()}]: ${message}`);
+    // Implement actual UI display here (e.g., update a message div)
+    const messageContainer = document.getElementById('messageContainer'); // You'd add this div in your HTML
+    if (messageContainer) {
+        messageContainer.textContent = message;
+        messageContainer.className = `p-3 rounded-lg mt-4 ${type === 'error' ? 'bg-red-100 text-red-700' : type === 'success' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`;
+    }
+}
+
+
+// Supabase Data Fetching Functions
+/**
+ * Fetches all seller data from Supabase and updates the global sellerData array.
+ * This function will also trigger rendering of cards and tags.
+ */
+async function fetchAllSellerData() {
+    // Select all seller profiles and their related services, products, and links
+    const { data: profiles, error: profilesError } = await supabase
+        .from('seller_profiles')
+        .select(`
+            id,
+            user_id,
+            company_name,
+            bio,
+            contact_info,
+            services ( id, name, description, price_range, tags ),
+            products ( id, name, description, price, stock ),
+            external_links ( id, platform_name, url )
+        `);
+
+    if (profilesError) {
+        console.error('Error fetching seller profiles:', profilesError.message);
+        showMessage('Error loading seller profiles.', 'error');
+        return;
+    }
+
+    // Transform data to match your existing sellerData structure
+    // Ensure nested arrays are correctly handled (Supabase will return them as arrays)
+    sellerData = profiles.map(profile => ({
+        id: profile.id,
+        userId: profile.user_id, // Store Supabase user ID for ownership checks
+        companyName: profile.company_name,
+        bio: profile.bio,
+        contactInfo: profile.contact_info,
+        services: profile.services || [],
+        products: profile.products || [],
+        externalLinks: profile.external_links || []
+    }));
+
+    renderSellerCards();
+    renderTagsSidebar();
+}
+
+/**
+ * Fetches the seller profile for the currently logged-in user.
+ * This would be used to determine if a user needs to create a profile or can add services.
+ */
+async function fetchSellerProfileForCurrentUser() {
+    if (!activeUser) {
+        console.log("No active user to fetch seller profile for.");
+        return null;
+    }
+    const { data, error } = await supabase
+        .from('seller_profiles')
+        .select('*')
+        .eq('user_id', activeUser.id)
+        .single(); // Use .single() as each user should have only one profile
+
+    if (error && error.code !== 'PGRST116') { // PGRST116 is "No rows found"
+        console.error('Error fetching current user\'s seller profile:', error.message);
+        return null;
+    }
+
+    if (data) {
+        console.log('Current user\'s seller profile:', data);
+        // You might store this profile data globally if needed, or just use it to update UI
+        return data;
+    } else {
+        console.log('Current user does not have a seller profile yet.');
+        return null;
+    }
+}
+
+
+// Helper function to update UI elements related to authentication status
+// You will need to implement the actual HTML elements for login, signup, logout, etc.
+function updateAuthUI() {
+    const authStatusDiv = document.getElementById('authStatus'); // Example div for status messages
+    if (authStatusDiv) {
+        if (activeUser) {
+            authStatusDiv.innerHTML = `Logged in as: ${activeUser.email} (<button onclick="signOut()" class="text-blue-500 hover:underline">Logout</button>)`;
+            // Add logic here to show elements for profile creation/editing, add service, etc.
+            // Example: document.getElementById('createProfileSection').classList.remove('hidden');
+        } else {
+            authStatusDiv.innerHTML = `Not logged in. <button onclick="showLoginForm()" class="text-blue-500 hover:underline">Login</button> or <button onclick="showSignupForm()" class="text-blue-500 hover:underline">Sign Up</button>`;
+            // Add logic here to hide elements for profile creation/editing, add service, etc.
+            // Example: document.getElementById('createProfileSection').classList.add('hidden');
+        }
+    }
+}
+
+
+// Your existing rendering and filtering functions
 /**
  * Renders all seller profile cards on the page.
  */
@@ -154,18 +191,16 @@ function renderSellerCards() {
 
     sellerData.forEach(seller => {
         const card = document.createElement('div');
-        card.id = `seller-card-${seller.id}`; // Add an ID to the card for easier selection if needed
+        card.id = `seller-card-${seller.id}`;
         card.className = `bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300
                          transform hover:-translate-y-1 cursor-pointer p-6 flex flex-col items-center
                          text-center border border-gray-200`;
-        card.onclick = () => openModal(seller.id); // Attach click event to open modal
+        card.onclick = () => openModal(seller.id);
 
-        // Collect unique tags from all services for preview
         const allServiceTags = [...new Set(seller.services.flatMap(svc => svc.tags || []))];
-        const displayedTags = allServiceTags.slice(0, 3); // Display up to 3 unique tags
+        const displayedTags = allServiceTags.slice(0, 3);
         const tagsHtml = displayedTags.map(tag => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 mr-1 mb-1">#${tag}</span>`).join('');
         const moreTags = allServiceTags.length > 3 ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 mr-1 mb-1">...</span>` : '';
-
 
         card.innerHTML = `
             <h2 class="text-2xl font-semibold text-gray-800 mb-2">${seller.companyName}</h2>
@@ -181,7 +216,7 @@ function renderSellerCards() {
         `;
         container.appendChild(card);
     });
-    filterSellers(); // Apply filters after rendering (important for initial load and tag clicks)
+    filterSellers();
 }
 
 /**
@@ -199,12 +234,10 @@ function openModal(sellerId) {
     modalBio.textContent = seller.bio;
     modalContactInfo.textContent = seller.contactInfo;
 
-    // Clear previous content
     modalServices.innerHTML = '';
     modalProducts.innerHTML = '';
     modalExternalLinks.innerHTML = '';
 
-    // Populate services
     if (seller.services.length > 0) {
         seller.services.forEach(service => {
             const li = document.createElement('li');
@@ -222,7 +255,6 @@ function openModal(sellerId) {
         modalServices.innerHTML = '<li>No services listed yet.</li>';
     }
 
-    // Populate products
     if (seller.products.length > 0) {
         seller.products.forEach(product => {
             const li = document.createElement('li');
@@ -234,7 +266,6 @@ function openModal(sellerId) {
         modalProducts.innerHTML = '<li>No products listed yet.</li>';
     }
 
-    // Populate external links
     if (seller.externalLinks.length > 0) {
         seller.externalLinks.forEach(link => {
             const li = document.createElement('li');
@@ -248,12 +279,11 @@ function openModal(sellerId) {
         modalExternalLinks.innerHTML = '<li>No external links provided.</li>';
     }
 
-    // Show modal with animation
     sellerDetailModal.classList.remove('hidden');
     setTimeout(() => {
         modalContent.classList.remove('opacity-0', 'scale-95');
         modalContent.classList.add('opacity-100', 'scale-100');
-    }, 10); // Small delay for transition
+    }, 10);
 }
 
 /**
@@ -264,7 +294,7 @@ function closeModal() {
     modalContent.classList.add('opacity-0', 'scale-95');
     setTimeout(() => {
         sellerDetailModal.classList.add('hidden');
-    }, 300); // Wait for transition to complete before hiding
+    }, 300);
 }
 
 /**
@@ -285,7 +315,6 @@ function filterSellers() {
             return;
         }
 
-        // Check for main search term
         const companyName = seller.companyName.toLowerCase();
         const bio = seller.bio.toLowerCase();
         const servicesText = seller.services.map(s => s.name.toLowerCase() + ' ' + s.description.toLowerCase()).join(' ');
@@ -297,15 +326,13 @@ function filterSellers() {
                               servicesText.includes(searchTerm) ||
                               productsText.includes(searchTerm);
 
-        // Check for active tag filter
         const allServiceTags = new Set(seller.services.flatMap(svc => svc.tags || []).map(tag => tag.toLowerCase()));
         const matchesTag = activeTagFilter === '' || allServiceTags.has(activeTagFilter);
 
-        // A card is visible if it matches BOTH the search term AND the tag filter term
         if (matchesSearch && matchesTag) {
-            card.style.display = ''; // Show card
+            card.style.display = '';
         } else {
-            card.style.display = 'none'; // Hide card
+            card.style.display = 'none';
         }
     });
 }
@@ -315,7 +342,7 @@ function filterSellers() {
  */
 function renderTagsSidebar() {
     const tagListContainer = document.getElementById('tagList');
-    tagListContainer.innerHTML = ''; // Clear existing tags
+    tagListContainer.innerHTML = '';
 
     const allTags = new Set();
     sellerData.forEach(seller => {
@@ -326,10 +353,8 @@ function renderTagsSidebar() {
         });
     });
 
-    // Sort tags alphabetically
     const sortedTags = Array.from(allTags).sort();
 
-    // "All" tag to clear filters
     const allTagElement = document.createElement('li');
     allTagElement.className = `px-3 py-2 rounded-lg cursor-pointer text-gray-800 font-medium
                                hover:bg-blue-100 hover:text-blue-700 transition duration-200 ease-in-out
@@ -350,10 +375,9 @@ function renderTagsSidebar() {
                        ${activeTagFilter === tag ? 'bg-blue-200 text-blue-800' : ''}`;
         li.textContent = `#${tag}`;
         li.onclick = () => {
-            // Toggle active filter: if clicking the current active tag, clear it. Otherwise, set it.
             activeTagFilter = (activeTagFilter === tag) ? '' : tag;
-            updateTagSelectionUI(); // Update UI for active/inactive tags
-            filterSellers(); // Re-filter seller cards
+            updateTagSelectionUI();
+            filterSellers();
         };
         tagListContainer.appendChild(li);
     });
@@ -368,7 +392,7 @@ function updateTagSelectionUI() {
         const tagText = li.textContent.startsWith('#') ? li.textContent.substring(1).toLowerCase() : li.textContent.toLowerCase();
         if (activeTagFilter === tagText || (activeTagFilter === '' && tagText === 'all services')) {
             li.classList.add('bg-blue-200', 'text-blue-800');
-            li.classList.remove('bg-blue-100', 'text-blue-700'); // Ensure hover state isn't stuck
+            li.classList.remove('bg-blue-100', 'text-blue-700');
         } else {
             li.classList.remove('bg-blue-200', 'text-blue-800');
         }
@@ -378,8 +402,24 @@ function updateTagSelectionUI() {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-    renderSellerCards();
-    renderTagsSidebar(); // Render the sidebar tags
+    // Listen for Supabase auth state changes immediately
+    supabase.auth.onAuthStateChange((event, session) => {
+        if (session) {
+            activeUser = session.user;
+            console.log('Auth state changed: Logged in', activeUser);
+            // Fetch the current user's seller profile (or check if they have one)
+            // This is useful for showing "create profile" or "add service" options
+            fetchSellerProfileForCurrentUser();
+        } else {
+            activeUser = null;
+            console.log('Auth state changed: Logged out');
+            // Clear any user-specific data and re-fetch all public data
+        }
+        // Always update auth UI regardless of login state
+        updateAuthUI();
+        // Always fetch all seller data (either public or user-specific if a profile exists)
+        fetchAllSellerData();
+    });
 
     // Attach event listeners to search input field
     document.getElementById('searchInput').addEventListener('keyup', filterSellers);
