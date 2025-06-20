@@ -27,9 +27,14 @@ const modalExternalLinks = document.getElementById('modalExternalLinks');
 // Variable to store the currently active filter tag
 let activeTagFilter = '';
 
-// New UI element references (added)
+// New UI element references (added and modified for the new button structure)
 const authStatusDiv = document.getElementById('authStatus');
-const authFormsDiv = document.getElementById('authForms');
+const authActionsDiv = document.getElementById('authActions'); // New container for action buttons
+const showLoginBtn = document.getElementById('showLoginBtn');
+const showSignupBtn = document.getElementById('showSignupBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+
+const authFormsDiv = document.getElementById('authForms'); // The container for login/signup input forms
 const loginFormDiv = document.getElementById('loginForm');
 const signupFormDiv = document.getElementById('signupForm');
 const loginEmailInput = document.getElementById('loginEmail');
@@ -47,7 +52,7 @@ const profileMessageDiv = document.getElementById('profileMessage');
 const addServiceSection = document.getElementById('addServiceSection');
 const serviceNameInput = document.getElementById('serviceName');
 const serviceDescriptionInput = document.getElementById('serviceDescription');
-const servicePriceRangeInput = document.getElementById('servicePriceRange'); // Corrected typo here
+const servicePriceRangeInput = document.getElementById('servicePriceRange'); // Corrected typo here previously
 const serviceTagsInput = document.getElementById('serviceTags');
 const serviceMessageDiv = document.getElementById('serviceMessage');
 
@@ -111,13 +116,15 @@ function showMessage(message, type = 'info') {
 }
 
 
-// New UI State Management Functions (added)
+// New UI State Management Functions (modified to use new button elements)
 /**
  * Handles showing the login form and hiding others.
  */
 function showLoginForm() {
-    loginFormDiv.classList.remove('hidden');
-    signupFormDiv.classList.add('hidden');
+    authFormsDiv.classList.remove('hidden'); // Show the forms container
+    loginFormDiv.classList.remove('hidden'); // Show login form
+    signupFormDiv.classList.add('hidden'); // Hide signup form
+    authActionsDiv.classList.add('hidden'); // Hide the initial action buttons (Login/Signup)
     messageContainer.textContent = ''; // Clear messages
 }
 
@@ -125,8 +132,10 @@ function showLoginForm() {
  * Handles showing the sign-up form and hiding others.
  */
 function showSignupForm() {
-    signupFormDiv.classList.remove('hidden');
-    loginFormDiv.classList.add('hidden');
+    authFormsDiv.classList.remove('hidden'); // Show the forms container
+    signupFormDiv.classList.remove('hidden'); // Show signup form
+    loginFormDiv.classList.add('hidden'); // Hide login form
+    authActionsDiv.classList.add('hidden'); // Hide the initial action buttons (Login/Signup)
     messageContainer.textContent = ''; // Clear messages
 }
 
@@ -200,7 +209,7 @@ async function fetchSellerProfileForCurrentUser() {
     }
     const { data, error } = await supabase
         .from('seller_profiles')
-        .select('*')
+        .select('id')
         .eq('user_id', activeUser.id)
         .single();
 
@@ -348,10 +357,12 @@ async function handleAddService() {
 // MODIFIED updateAuthUI function (now properly handles UI visibility based on auth and profile existence)
 async function updateAuthUI() {
     if (activeUser) {
-        authStatusDiv.innerHTML = `Logged in as: <span class="font-semibold">${activeUser.email}</span> (<button onclick="signOut()" class="text-blue-600 hover:underline">Logout</button>)`;
-        authFormsDiv.classList.add('hidden'); // Hide login/signup forms
+        authStatusDiv.innerHTML = `Logged in as: <span class="font-semibold">${activeUser.email}</span>`;
+        authActionsDiv.classList.add('hidden'); // Hide initial action buttons (Login/Signup)
+        logoutBtn.classList.remove('hidden'); // Show logout button
+        authFormsDiv.classList.add('hidden'); // Hide login/signup forms (if open)
 
-        const userProfile = await fetchSellerProfileForCurrentUser(); // Check if user has a profile
+        const userProfile = await fetchSellerProfileForCurrentUser();
         if (userProfile) {
             profileCreationSection.classList.add('hidden'); // Hide profile creation if profile exists
             addServiceSection.classList.remove('hidden'); // Show add service section
@@ -361,9 +372,11 @@ async function updateAuthUI() {
         }
     } else {
         authStatusDiv.innerHTML = `Not logged in.`;
-        authFormsDiv.classList.remove('hidden'); // Show login/signup forms
-        loginFormDiv.classList.remove('hidden'); // Default to showing login form
-        signupFormDiv.classList.add('hidden'); // Hide signup initially
+        authActionsDiv.classList.remove('hidden'); // Show initial action buttons
+        showLoginBtn.classList.remove('hidden'); // Ensure Login button is visible initially
+        showSignupBtn.classList.remove('hidden'); // Ensure Sign Up button is visible initially
+        logoutBtn.classList.add('hidden'); // Hide logout button
+        authFormsDiv.classList.add('hidden'); // Ensure forms are hidden initially
         profileCreationSection.classList.add('hidden'); // Hide profile creation
         addServiceSection.classList.add('hidden'); // Hide add service
         messageContainer.textContent = ''; // Clear message when logging out
@@ -590,10 +603,16 @@ function updateTagSelectionUI() {
 }
 
 
-// Modified DOMContentLoaded Listener (existing, but re-checked against latest HTML and logic)
+// Modified DOMContentLoaded Listener
 document.addEventListener('DOMContentLoaded', () => {
     // Attach event listeners to search input field
     document.getElementById('searchInput').addEventListener('keyup', filterSellers);
+
+    // Attach event listeners for auth action buttons (FIX for "not defined" error)
+    showLoginBtn.addEventListener('click', showLoginForm);
+    showSignupBtn.addEventListener('click', showSignupForm);
+    logoutBtn.addEventListener('click', signOut); // signOut is already an async function
+
 
     // Supabase auth state change listener
     supabase.auth.onAuthStateChange((event, session) => {
@@ -617,6 +636,9 @@ document.addEventListener('DOMContentLoaded', () => {
             activeUser = null;
         }
         updateAuthUI();
+        // fetchAllSellerData() is also called by the onAuthStateChange listener,
+        // so calling it here again might be redundant for initial load if onAuthStateChange
+        // fires reliably on first load. However, keeping it for robustness.
         fetchAllSellerData();
     });
 
