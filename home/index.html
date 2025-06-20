@@ -14,9 +14,9 @@
 </head>
 <body class="min-h-screen flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8">
 
-    <div class="max-w-7xl w-full mx-auto flex flex-col gap-8">
-        <!-- Header Section (always at the top) -->
-        <header class="text-center mb-8">
+    <div class="max-w-7xl w-full mx-auto flex flex-col lg:flex-row gap-8">
+        <!-- Header Section (moved to be above sidebar for better flow on smaller screens) -->
+        <header class="text-center mb-8 lg:hidden">
             <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-4">
                 Welcome to the Seller Hub
             </h1>
@@ -25,37 +25,46 @@
             </p>
         </header>
 
-        <!-- Search Bar (Sticky) -->
-        <div class="sticky top-0 z-20 bg-[#f3f4f6] py-4 rounded-b-xl shadow-md
-                    flex justify-center items-center">
-            <div class="relative w-full max-w-lg">
-                <input type="text" id="searchInput"
-                       class="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-gray-300 focus:outline-none focus:border-blue-500 shadow-sm transition duration-300 ease-in-out"
-                       placeholder="Search sellers or services...">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
-            </div>
-        </div>
+        <!-- Sidebar for Tags -->
+        <aside class="w-full lg:w-1/4 xl:w-1/5 bg-white rounded-xl shadow-lg p-6 lg:sticky lg:top-8 self-start h-fit">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Filter by Tag</h2>
+            <ul id="tagList" class="space-y-2">
+                <!-- Tags will be dynamically loaded here by JavaScript -->
+            </ul>
+        </aside>
 
-        <!-- Content Area: Sidebar and Seller Cards -->
-        <div class="flex flex-col lg:flex-row gap-8 pt-4"> <!-- pt-4 to prevent content from going under sticky elements -->
-            <!-- Sidebar for Tags (Sticky, below search bar) -->
-            <!-- Adjusted top value to account for the sticky search bar's height (~90px) -->
-            <aside class="w-full lg:w-1/4 xl:w-1/5 bg-white rounded-xl shadow-lg p-6 sticky top-[90px] self-start h-fit z-10">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Filter by Tag</h2>
-                <!-- Reverted styling for the tag container here -->
-                <ul id="tagList" class="space-y-2">
-                    <!-- Tags will be dynamically loaded here by JavaScript -->
-                </ul>
-            </aside>
+        <!-- Main Content Area -->
+        <main class="w-full lg:w-3/4 xl:w-4/5">
+            <!-- Header Section (visible on larger screens) -->
+            <header class="text-center mb-12 hidden lg:block">
+                <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-4">
+                    Welcome to the Seller Hub
+                </h1>
+                <p class="text-lg text-gray-600">
+                    Discover a variety of services and products from our talented sellers.
+                </p>
+            </header>
+
+            <!-- Search Bar -->
+            <div class="sticky top-0 z-10 bg-[#f3f4f6] py-4 mb-8 rounded-b-xl shadow-sm
+                        flex justify-center items-center">
+                <div class="relative w-full max-w-lg">
+                    <input type="text" id="searchInput"
+                           class="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-gray-300 focus:outline-none focus:border-blue-500 shadow-sm transition duration-300 ease-in-out"
+                           placeholder="Search sellers or services...">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                </div>
+                <!-- Removed the tag filter input here -->
+            </div>
 
             <!-- Seller Profile Cards Section -->
             <div id="sellerCardsContainer"
-                 class="grid gap-6 w-full lg:w-3/4 xl:w-4/5 grid-auto-fit-cols">
+                 class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 pt-4">
                 <!-- Seller cards will be dynamically loaded here by JavaScript -->
             </div>
-        </div>
+        </main>
     </div>
 
     <!-- Seller Detail Modal (Hidden by default) -->
