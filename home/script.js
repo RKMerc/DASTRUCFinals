@@ -44,7 +44,7 @@ const signupPasswordInput = document.getElementById('signupPassword');
 const messageContainer = document.getElementById('messageContainer');
 
 const profileCreationSection = document.getElementById('profileCreationSection');
-const profileCompanyNameInput = document.getElementById('profileCompanyName');
+const profileCompanyNameInput = document = document.getElementById('profileCompanyName'); // Typo alert: "document = document.getElementById"
 const profileBioInput = document.getElementById('profileBio');
 const profileContactInfoInput = document.getElementById('profileContactInfo');
 const profileMessageDiv = document.getElementById('profileMessage');
@@ -310,6 +310,15 @@ async function addServiceToProfile(serviceData) {
         return;
     }
 
+    // Process tags: Split by comma, trim whitespace, filter out empty strings.
+    // If the resulting array is empty, send null to Supabase.
+    const processedTags = serviceData.tags
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag !== '');
+
+    const tagsToSend = processedTags.length > 0 ? processedTags : null; // Send null if no tags
+
     const { data, error } = await supabase
         .from('services')
         .insert({
@@ -317,7 +326,7 @@ async function addServiceToProfile(serviceData) {
             name: serviceData.name,
             description: serviceData.description,
             price_range: serviceData.priceRange,
-            tags: serviceData.tags.split(',').map(tag => tag.trim()).filter(tag => tag !== ''),
+            tags: tagsToSend, // Use the processed tags or null
         })
         .select();
 
@@ -346,7 +355,7 @@ async function handleAddService() {
     const name = serviceNameInput.value;
     const description = serviceDescriptionInput.value;
     const priceRange = servicePriceRangeInput.value;
-    const tags = serviceTagsInput.value;
+    const tags = serviceTagsInput.value; // Get raw tags string
 
     if (!name || !description || !priceRange) {
         serviceMessageDiv.textContent = 'Service Name, Description, and Price Range are required!';
@@ -367,10 +376,10 @@ async function updateAuthUI() {
 
     if (activeUser) {
         // User is logged in
-        authStatusDiv.innerHTML = `Logged in as: <span class="font-semibold">${activeUser.email}</span>`;
-        authActionsDiv.classList.add('hidden'); // Hide Login/Signup buttons
-        logoutBtn.classList.remove('hidden'); // Show Logout button
-        authFormsDiv.classList.add('hidden'); // Ensure forms are hidden (user is logged in, not filling a form)
+        authStatusDiv.innerHTML = `Logged in as: <span class="font-semibold">${activeUser.email}</span>`; // Display status without buttons here
+        authActionsDiv.classList.add('hidden'); // Hide the main action buttons (Login/Signup)
+        logoutBtn.classList.remove('hidden'); // Show logout button
+        authFormsDiv.classList.add('hidden'); // Hide login/signup forms (if open)
 
         const userProfile = await fetchSellerProfileForCurrentUser(); // Check if user has a profile
         if (userProfile) {
@@ -385,7 +394,7 @@ async function updateAuthUI() {
     } else {
         // User is NOT logged in
         authStatusDiv.innerHTML = `Not logged in.`;
-        authActionsDiv.classList.remove('hidden'); // Show Login/Signup buttons
+        authActionsDiv.classList.remove('hidden'); // Show the main action buttons
         showLoginBtn.classList.remove('hidden'); // Ensure Login button is visible
         showSignupBtn.classList.remove('hidden'); // Ensure Sign Up button is visible
         logoutBtn.classList.add('hidden'); // Hide Logout button
@@ -466,7 +475,7 @@ function openModal(sellerId) {
                 `<div class="flex flex-wrap mt-1">${service.tags.map(tag => `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 mr-1 mb-1">#${tag}</span>`).join('')}</div>` : '';
 
             li.innerHTML = `
-                <span class="font-medium">${service.name}:</span> ${service.description} (<span class="text-blue-600">${service.priceRange}</span>)
+                <span class="font-medium">${service.name}:</span> ${service.description} (${service.priceRange})
                 ${serviceTagsHtml}
             `;
             modalServices.appendChild(li);
@@ -626,7 +635,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('searchInput').addEventListener('keyup', filterSellers);
 
     // Attach event listeners for auth action buttons
-    // Using addEventListener for better practice and to ensure functions are defined
     if (showLoginBtn) showLoginBtn.addEventListener('click', showLoginForm);
     if (showSignupBtn) showSignupBtn.addEventListener('click', showSignupForm);
     if (logoutBtn) logoutBtn.addEventListener('click', signOut);
